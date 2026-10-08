@@ -4,14 +4,12 @@ ZSHRC="$HOME/.zshrc"
 CURRENT_DIR="$(pwd)"
 
 # .zshrc 에 삽입할 블록을 마커로 감싼다.
-# 이 마커 덕분에 script-shell 위치를 옮긴 뒤 다시 실행해도
-# 옛 경로가 박힌 블록을 통째로 교체할 수 있다(중복/깨진 줄 방지).
 BLOCK_BEGIN="# >>> script-shell init >>>"
 BLOCK_END="# <<< script-shell init <<<"
 
 LINES_TO_ADD=(
   "export PATH=\"$CURRENT_DIR/bin:\$PATH\""
-  "export GIT_CONFIG_GLOBAL=\"$CURRENT_DIR/configs/gitconfig\""
+  "export GIT_CONFIG_GLOBAL=\"$CURRENT_DIR/git/gitconfig\""
   "for f in '$CURRENT_DIR/profiles'/*; do source \$f; done"
   "export PATH=\"$HOME/.local/bin:\$PATH\""
 )
@@ -25,9 +23,9 @@ if grep -Fqx "$BLOCK_BEGIN" "$ZSHRC"; then
     $0 == b { skip = 1; next }
     $0 == e { skip = 0; next }
     !skip   { print }
-  ' "$ZSHRC" > "$TMP_ZSHRC"
+  ' "$ZSHRC" >"$TMP_ZSHRC"
   # 블록 제거로 생긴 끝쪽 빈 줄을 정리한다.
-  awk 'NF { last = NR } { lines[NR] = $0 } END { for (i = 1; i <= last; i++) print lines[i] }' "$TMP_ZSHRC" > "$ZSHRC"
+  awk 'NF { last = NR } { lines[NR] = $0 } END { for (i = 1; i <= last; i++) print lines[i] }' "$TMP_ZSHRC" >"$ZSHRC"
   rm -f "$TMP_ZSHRC"
   echo "🔄  기존 블록을 갱신합니다: $CURRENT_DIR"
 else
@@ -42,11 +40,11 @@ fi
     echo "$LINE"
   done
   echo "$BLOCK_END"
-} >> "$ZSHRC"
+} >>"$ZSHRC"
 
 # AeroSpace 설정 심볼릭 링크 (~/.aerospace.toml -> 이 저장소의 configs/aerospace.toml)
-AEROSPACE_SRC="$CURRENT_DIR/configs/aerospace.toml"
-AEROSPACE_DEST="$HOME/.aerospace.toml"
+AEROSPACE_SRC="$CURRENT_DIR/aerospace/aerospace.toml"
+AEROSPACE_DEST="$HOME/.config/aerospace/.aerospace.toml"
 
 if [ -L "$AEROSPACE_DEST" ] && [ "$(readlink "$AEROSPACE_DEST")" = "$AEROSPACE_SRC" ]; then
   echo "⚠️  이미 링크됨: $AEROSPACE_DEST"
@@ -60,7 +58,7 @@ else
 fi
 
 # tmux 설정 심볼릭 링크 (~/.tmux.conf -> 이 저장소의 configs/tmux.conf)
-TMUX_SRC="$CURRENT_DIR/configs/tmux.conf"
+TMUX_SRC="$CURRENT_DIR/tmux/tmux.conf"
 TMUX_DEST="$HOME/.tmux.conf"
 
 if [ -L "$TMUX_DEST" ] && [ "$(readlink "$TMUX_DEST")" = "$TMUX_SRC" ]; then

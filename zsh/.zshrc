@@ -140,15 +140,15 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 
-# >>> script-shell init >>>
-export PATH="/Users/sangjo/Workspace/jojee/git/configs/bin:$PATH"
-export GIT_CONFIG_GLOBAL="/Users/sangjo/Workspace/jojee/git/configs/configs/gitconfig"
-for f in '/Users/sangjo/Workspace/jojee/git/configs/profiles'/*; do source $f; done
-export PATH="/Users/sangjo/.local/bin:$PATH"
-# <<< script-shell init <<<
 
 # nvim
 alias vi="nvim"
 alias vim="nvim"
 export EDITOR="nvim"
 
+# >>> script-shell init >>>
+export PATH="/Users/sangjo/Workspace/jojee/git/configs/bin:$PATH"
+export GIT_CONFIG_GLOBAL="/Users/sangjo/Workspace/jojee/git/configs/git/gitconfig"
+for f in '/Users/sangjo/Workspace/jojee/git/configs/profiles'/*; do source $f; done
+export PATH="/Users/sangjo/.local/bin:$PATH"
+# <<< script-shell init <<<
