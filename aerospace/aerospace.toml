@@ -25,37 +25,39 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 automatically-unhide-macos-hidden-apps = false
 
-# 비어 있어도 항상 유지할 워크스페이스 (앱 배치용 1~5)
-persistent-workspaces = ["M", "BB", "BC", "BH", "SL", "SP", "E", "D"]
-
 on-mode-changed = []
 
-[key-mapping]
-    preset = 'qwerty'
-
-# 창 사이(inner) / 화면 가장자리(outer) 여백 (px)
-[gaps]
-    inner.horizontal = 0
-    inner.vertical =   0
-    outer.left =       0
-    outer.bottom =     0
-    outer.top =        0
-    outer.right =      0
+# 비어 있어도 항상 유지할 워크스페이스 (앱 배치용 1~5)
+persistent-workspaces = ["Slack", "Spark", "ETC", "iTerm", "Obsidian", "Chrome"]
 
 # ===== 워크스페이스 → 모니터 배정 =====
 # WS1(iTerm)은 모니터 강제 배정 없음 — 어느 모니터에서나 표시.
 [workspace-to-monitor-force-assignment]
-    M = [2, 'main']     # iTerm: 모니터 2번 우선, 없으면 main 모니터
-    BB = [3, 'main']    # Chrome: 모니터 3번 우선, 없으면 main 모니터
-    BC = [3, 'main']    # Chrome 추가: 모니터 3번 우선, 없으면 main 모니터
-    BH = [3, 'main']    # Chrome 추가: 모니터 3번 우선, 없으면 main 모니터
-    E = [1, 'main']     # 범용: main 모니터
-    SL = [1, 'main']    # Slack: main 모니터
-    SP = [1, 'main']    # Spark Desktop: main 모니터
-    D = [1, 'main']     # DataGrip: main 모니터
+    Slack = [1, 'main']      # Slack
+    Spark = [1, 'main']      # Spark
+    ETC = [1, 'main']        # ETC
+    iTerm = [2, 'main']      # iTerm
+    Obsidian =[2, 'main']    # Obsidian
+    Chrome = [3, 2, 'main']  # Chrome
 
 # ===== main 모드: 평소 키바인딩 (모디파이어 = Alt/⌥, tmux C-Space와 충돌 없음) =====
 [mode.main.binding]
+
+    # 워크스페이스 전환
+    alt-1 = 'workspace Slack'    # Slack
+    alt-2 = 'workspace Spark'    # Spark Desktop
+    alt-3 = 'workspace ETC'      # 범용
+    alt-q = 'workspace iTerm'    # Chrome
+    alt-w = 'workspace Obsidian' # DataGrip
+    alt-a = 'workspace Chrome'   # Chrome
+
+    # 현재 창을 워크스페이스로 이동(이동 후 따라가기)
+    alt-shift-1 = 'move-node-to-workspace Slack --focus-follows-window'
+    alt-shift-2 = 'move-node-to-workspace Spark --focus-follows-window'
+    alt-shift-3 = 'move-node-to-workspace ETC --focus-follows-window'
+    alt-shift-q = 'move-node-to-workspace iTerm --focus-follows-window'
+    alt-shift-w = 'move-node-to-workspace Obsidian --focus-follows-window'
+    alt-shift-a = 'move-node-to-workspace Chrome --focus-follows-window'
 
     # i3처럼 alt-enter 로 새 터미널(iTerm) 열기
     alt-enter = 'exec-and-forget open -na iTerm'
@@ -79,26 +81,6 @@ on-mode-changed = []
     # 리사이즈 (smart = 현재 분할 방향에 맞춰 조절)
     alt-minus = 'resize smart -50'
     alt-equal = 'resize smart +50'
-
-    # 워크스페이스 전환
-    alt-1 = 'workspace M'    # iTerm
-    alt-2 = 'workspace SL'   # Slack
-    alt-3 = 'workspace SP'   # Spark Desktop
-    alt-4 = 'workspace E'    # 범용
-    alt-q = 'workspace BB'   # Chrome
-    alt-w = 'workspace BC'   # Chrome
-    alt-e = 'workspace BH'   # Chrome
-    alt-d = 'workspace D'    # DataGrip
-
-    # 현재 창을 워크스페이스로 이동(이동 후 따라가기)
-    alt-shift-1 = 'move-node-to-workspace M --focus-follows-window'
-    alt-shift-2 = 'move-node-to-workspace SL --focus-follows-window'
-    alt-shift-3 = 'move-node-to-workspace SP --focus-follows-window'
-    alt-shift-4 = 'move-node-to-workspace E --focus-follows-window'
-    alt-shift-q = 'move-node-to-workspace BB --focus-follows-window'
-    alt-shift-w = 'move-node-to-workspace BC --focus-follows-window'
-    alt-shift-e = 'move-node-to-workspace BH --focus-follows-window'
-    alt-shift-d = 'move-node-to-workspace D --focus-follows-window'
 
     # 직전 워크스페이스 토글 / 워크스페이스를 다음 모니터로
     alt-tab = 'workspace-back-and-forth'
@@ -125,45 +107,48 @@ on-mode-changed = []
     alt-shift-l = ['join-with right', 'mode main']
 
 # ===== 앱 자동 배치 =====
-# M: iTerm   BB: Chrome   BC/BH: Chrome(수동/프로필용)   SL: Slack   SP: Spark Desktop   E: 범용
 [[on-window-detected]]
     if.app-id = 'com.googlecode.iterm2'        # iTerm
-    run = 'move-node-to-workspace M'
+    run = 'move-node-to-workspace iTerm'
+
+[[on-window-detected]]
+    if.app-id = 'md.obsidian'                  # Obsidian
+    run = 'move-node-to-workspace Obsidian'
 
 # Chrome 시크릿 창은 창 제목 끝에 "(Incognito)"가 붙음 → E로 보냄.
 # 반드시 아래 일반 Chrome 규칙보다 위에 위치(첫 매칭에서 멈춤).
 [[on-window-detected]]
     if.app-id = 'com.google.Chrome'
     if.window-title-regex-substring = 'Incognito'
-    run = 'move-node-to-workspace E'
+    run = 'move-node-to-workspace ETC'
 
-# Chrome은 auto-assign 안 함(수동 배치). catch-all(→E)에 안 걸리도록 no-op으로 멈춤.
 [[on-window-detected]]
     if.app-id = 'com.google.Chrome'            # Chrome
-    run = 'layout tiling'
+    run = 'move-node-to-workspace Chrome'
 
 [[on-window-detected]]
     if.app-id = 'com.tinyspeck.slackmacgap'    # Slack
-    run = ['move-node-to-workspace SL', 'layout v_accordion']  # 나누지 않고 쌓기
+    run = ['move-node-to-workspace Slack', 'layout v_accordion']  # 나누지 않고 쌓기
 
 [[on-window-detected]]
     if.app-id = 'com.readdle.SparkDesktop'     # Spark Desktop
-    run = ['move-node-to-workspace SP', 'layout v_accordion']  # 나누지 않고 쌓기
-
-[[on-window-detected]]
-    if.app-id = 'com.jetbrains.datagrip'       # DataGrip
-    run = ['move-node-to-workspace D', 'layout v_accordion']  # 나누지 않고 쌓기
-
-# 작은 유틸/채팅 창은 타일링하지 않고 플로팅(원래 크기 유지)
-[[on-window-detected]]
-    if.app-id = 'com.apple.systempreferences'  # 시스템 설정
-    run = 'layout floating'
-
-[[on-window-detected]]
-    if.app-id = 'com.kakao.KakaoTalkMac'        # 카카오톡
-    run = 'layout floating'
+    run = ['move-node-to-workspace Spark', 'layout v_accordion']  # 나누지 않고 쌓기
 
 # catch-all: 위 규칙에 안 걸린(워크스페이스 미지정) 앱은 모두 E로 (세로 아코디언으로 쌓기).
 # 반드시 맨 마지막에 위치 — 첫 매칭에서 멈추므로 위 규칙들이 우선함.
 [[on-window-detected]]
-    run = ['move-node-to-workspace E', 'layout v_accordion']
+    if = 'true'
+    run = ['move-node-to-workspace ETC', 'layout floating']
+
+[key-mapping]
+    preset = 'qwerty'
+
+# 창 사이(inner) / 화면 가장자리(outer) 여백 (px)
+[gaps]
+    inner.horizontal = 0
+    inner.vertical =   0
+    outer.left =       0
+    outer.bottom =     0
+    outer.top =        0
+    outer.right =      0
+

@@ -44,7 +44,8 @@ fi
 
 # AeroSpace 설정 심볼릭 링크 (~/.aerospace.toml -> 이 저장소의 configs/aerospace.toml)
 AEROSPACE_SRC="$CURRENT_DIR/aerospace/aerospace.toml"
-AEROSPACE_DEST="$HOME/.config/aerospace/.aerospace.toml"
+AEROSPACE_DEST_DIR="$HOME/.config/aerospace"
+AEROSPACE_DEST="$AEROSPACE_DEST_DIR/aerospace.toml"
 
 if [ -L "$AEROSPACE_DEST" ] && [ "$(readlink "$AEROSPACE_DEST")" = "$AEROSPACE_SRC" ]; then
   echo "⚠️  이미 링크됨: $AEROSPACE_DEST"
@@ -53,6 +54,7 @@ elif [ -e "$AEROSPACE_DEST" ] || [ -L "$AEROSPACE_DEST" ]; then
   ln -s "$AEROSPACE_SRC" "$AEROSPACE_DEST"
   echo "✅  기존 파일 백업($AEROSPACE_DEST.bak) 후 링크 생성: $AEROSPACE_DEST"
 else
+  mkdir -p "$AEROSPACE_DEST_DIR"
   ln -s "$AEROSPACE_SRC" "$AEROSPACE_DEST"
   echo "✅  링크 생성: $AEROSPACE_DEST"
 fi
